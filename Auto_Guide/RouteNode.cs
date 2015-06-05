@@ -16,6 +16,8 @@ namespace Auto_Guide
     {
         private int count;
         private int index;
+        public int Count { get { return count; } }
+        public int Index { get { return index; } }
         private static RouteNode head;
         private List<Image<Bgr, Byte>> NodeImages=new List<Image<Bgr, byte>>();
         private List<string> NodeDirectives=new List<string>();

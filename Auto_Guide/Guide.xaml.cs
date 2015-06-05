@@ -35,6 +35,7 @@ namespace Auto_Guide
         RouteNode head;
         IPairedDevice _device;
         ICamera _camera;
+        bool keepmatching = true;
         MemoryStream stream;
         //two global buffer queue
         StatusQueueChecker statusQ;
@@ -140,7 +141,7 @@ namespace Auto_Guide
             {
                 stream = new System.IO.MemoryStream(e.Frame.ImageStream);
                 if (null == stream)
-                    return;                
+                    return;
                 await Application.Current.Dispatcher.BeginInvoke(
                     System.Windows.Threading.DispatcherPriority.Background,
                     new Action(() =>
@@ -151,12 +152,14 @@ namespace Auto_Guide
                             bitmapImage.BeginInit();
                             bitmapImage.StreamSource = stream;   // Copy stream to local
                             bitmapImage.EndInit();
-                                #region MatchAndFindHomography
-                                observed = new Image<Bgr, byte>(UIHandler.bmimg2bitmap(bitmapImage));
+                            #region MatchAndFindHomography
+                            observed = new Image<Bgr, byte>(UIHandler.bmimg2bitmap(bitmapImage));
                             UIHandler.show_Image(cam, model);
                             model.Save("D:\\1.jpg");
                             Image<Gray, Byte> m_g = new Image<Gray, Byte>(model.ToBitmap());
-                                Image<Gray, Byte> o_g = new Image<Gray, Byte>(observed.ToBitmap());
+                            Image<Gray, Byte> o_g = new Image<Gray, Byte>(observed.ToBitmap());
+                            if (keepmatching)
+                            {
                                 Image<Bgr, Byte> res = cpu.DrawResult(m_g, o_g, out time, out area, areathreshold, out center/*,out distance*/);
                                 //res.Save("D:\\res_" + (++index) + ".jpg");
                                 cam_right.Source = UIHandler.ToBitmapSource(res.ToBitmap());
@@ -183,11 +186,13 @@ namespace Auto_Guide
                                     { flag -= 1; flag = flag < -5 ? -5 : flag; };
 
 
-                                    if (flag > -4)
+                                    if (flag > -3)
                                     {
-                                        txt_dist.Content = txt;
+                                        flag = -5;keepmatching = false;
+                                        if ((head.Count - head.Index) == 0) { MessageBox.Show("Finished!");this.Close(); }
+                                        else MessageBox.Show("Reached Node\t" + (head.Index) + "\n" + head.Count + "\tNodes in total\n" + (head.Count - head.Index) + "\tNodes Ahead\nDirective:" + txt);
+                                        keepmatching = true;
                                         head.GetNextNode(out model, out txt);
-                                    flag = -5;
                                     }
                                     else txt_dist.Content = null;
                                 }
@@ -199,13 +204,16 @@ namespace Auto_Guide
                                     txt_direction.Content = "Wait for matching......";
                                     direction.Source = null;
                                 }
+
                                 #endregion
-                            
+
+                            }
+                            else UIHandler.show_Image(cam_right, observed);
                         }
                         catch (Exception ex) { };
                     }));
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { } 
         }
 
     }
