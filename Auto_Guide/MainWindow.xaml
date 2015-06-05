@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Auto_Guide"
         mc:Ignorable="d"
-        Title="MainWindow">
+        Title="MainWindow" Height="308" Width="258">
     <Grid>
-        <Image x:Name="cam" HorizontalAlignment="Left" Height="300" Margin="10,30,0,0" VerticalAlignment="Top" Width="400"/>
-        <Image x:Name="cam_right" HorizontalAlignment="Left" Height="300" Margin="430,30,-55,0" VerticalAlignment="Top" Width="400"/>
+        <Button x:Name="button" Content="New Nodes" HorizontalAlignment="Left" Margin="78,65,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
+        <Button x:Name="button1" Content="AutoTrack" HorizontalAlignment="Left" Margin="78,183,0,0" VerticalAlignment="Top" Width="75"/>
 
     </Grid>
 </Window>

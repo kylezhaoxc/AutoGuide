@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BetterTogetherPCLib">
-      <HintPath>..\..\..\..\..\..\Downloads\BetterTogetherPCLib.dll</HintPath>
+      <HintPath>..\..\..\..\..\Downloads\BetterTogetherPCLib.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.CV">
       <HintPath>..\..\..\..\..\..\..\..\Emgu\emgucv-windows-universal-cuda 2.4.10.1940\bin\Emgu.CV.dll</HintPath>
@@ -87,11 +87,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="QueueChecker.cs" />
     <Compile Include="RouteNode.cs" />
     <Compile Include="SurfProcessor.cs" />
     <Compile Include="UIHandler.cs" />
     <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NewRoute.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -99,8 +106,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="NewRoute.xaml.cs">
+      <DependentUpon>NewRoute.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

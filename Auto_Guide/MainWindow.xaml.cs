@@ -10,7 +10,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Auto_Guide
@@ -23,6 +22,13 @@ namespace Auto_Guide
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            NewRoute rt = new NewRoute(this);
+            rt.Show();
+            this.Hide();
         }
     }
 }
