@@ -180,7 +180,7 @@ namespace Auto_Guide
 
                                     #region estimate-distance
                                     //use area
-                                    if (area > 250000)
+                                    if (area > 250000/4)
                                     { flag += 1; flag = flag > 5 ? 5 : flag; }
                                     else
                                     { flag -= 1; flag = flag < -5 ? -5 : flag; };
