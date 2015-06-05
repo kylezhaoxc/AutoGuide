@@ -30,5 +30,12 @@ namespace Auto_Guide
             rt.Show();
             this.Hide();
         }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            Guide gd = new Guide(this);
+            gd.Show();
+            this.Hide();
+        }
     }
 }

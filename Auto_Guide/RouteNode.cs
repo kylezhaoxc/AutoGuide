@@ -9,15 +9,16 @@ using Emgu.CV.Features2D;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
 
-namespace Match_Surrounding
+namespace Auto_Guide
 {
+    [Serializable]
     class RouteNode
     {
         private int count;
         private int index;
         private static RouteNode head;
-        private List<Image<Bgr, Byte>> NodeImages;
-        private List<string> NodeDirectives;
+        private List<Image<Bgr, Byte>> NodeImages=new List<Image<Bgr, byte>>();
+        private List<string> NodeDirectives=new List<string>();
         public static RouteNode GetHead()
         {
             if (head == null) { head = new RouteNode(); head.count = 0;head.index = 0; return head; }
@@ -32,16 +33,15 @@ namespace Match_Surrounding
                 count++;
             }
         }
-        public void GetNextNode(out Image<Bgr, Byte> img, out string txt)
+        public void GetNextNode(out Image<Bgr, Byte> image, out string txt)
         {
-            img = null;txt = null;
-            if (index <= count)
+            image = null;txt = null;
+            if (index <=count)
             {
-                img = NodeImages[index];
-                txt = NodeDirectives[index];
-                index++; return;
+                image=NodeImages[index];
+                txt=NodeDirectives[index];
+                index++; 
             }
-            else return;
         }
     }
 }

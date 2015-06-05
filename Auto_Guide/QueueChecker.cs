@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Match_Surrounding
+namespace Auto_Guide
 {
     class QueueChecker<T>
     {
