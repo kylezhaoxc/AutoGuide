@@ -176,10 +176,10 @@ namespace Auto_Guide
                new PointF(rect.Left, rect.Top)
                     };*/
                 PointF[] pts = new PointF[] {
-               new PointF(rect.Left+(rect.Right-rect.Left)/4, rect.Bottom-(rect.Bottom-rect.Top)/4),
-               new PointF(rect.Right-(rect.Right-rect.Left)/4, rect.Bottom-(rect.Bottom-rect.Top)/4),
-               new PointF(rect.Right-(rect.Right-rect.Left)/4, rect.Top+(rect.Bottom-rect.Top)/4),
-               new PointF(rect.Left+(rect.Right-rect.Left)/4, rect.Top+(rect.Bottom-rect.Top)/4)
+               new PointF(rect.Left+(rect.Right-rect.Left)/5, rect.Bottom-(rect.Bottom-rect.Top)/5),
+               new PointF(rect.Right-(rect.Right-rect.Left)/5, rect.Bottom-(rect.Bottom-rect.Top)/5),
+               new PointF(rect.Right-(rect.Right-rect.Left)/5, rect.Top+(rect.Bottom-rect.Top)/5),
+               new PointF(rect.Left+(rect.Right-rect.Left)/5, rect.Top+(rect.Bottom-rect.Top)/5)
                     };
                 //根据整个图片的旋转、变形情况，计算出原图中四个顶点转换后的坐标，并画出四边形
                 homography.ProjectPoints(pts);
