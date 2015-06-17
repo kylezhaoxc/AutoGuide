@@ -24,7 +24,7 @@ namespace Auto_Guide
     {
         public List<Image<Bgr, byte>> NodeImages { get; } = new List<Image<Bgr, byte>>();
         public List<string> NodeDirectives { get; } = new List<string>();
-        RouteNode _head;
+        readonly RouteNode _head;
         IPairedDevice _device;
         ICamera _camera;
         bool _keepmatching = true;
