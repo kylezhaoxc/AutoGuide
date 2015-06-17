@@ -1,73 +1,60 @@
-﻿using BetterTogether.Device;
-using BetterTogether.Media;
-using System;
-using System.IO;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Threading;
+using BetterTogether.Device;
+using BetterTogether.Media;
 using Emgu.CV;
-using Emgu.CV.CvEnum;
-using Emgu.CV.Features2D;
 using Emgu.CV.Structure;
-using Emgu.CV.Util;
-using System.Runtime.Serialization.Formatters;
+using Brushes = System.Windows.Media.Brushes;
+using Point = System.Drawing.Point;
+using Size = System.Windows.Size;
 
 namespace Auto_Guide
 {
     /// <summary>
     /// Interaction logic for Guide.xaml
     /// </summary>
-    public partial class Guide : Window
+    public partial class Guide 
     {
-        private MainWindow father;
-        private List<Image<Bgr, Byte>> NodeImages = new List<Image<Bgr, byte>>();
-        private List<string> NodeDirectives = new List<string>();
-        RouteNode head;
+        public List<Image<Bgr, byte>> NodeImages { get; } = new List<Image<Bgr, byte>>();
+        public List<string> NodeDirectives { get; } = new List<string>();
+        RouteNode _head;
         IPairedDevice _device;
         ICamera _camera;
-        bool keepmatching = true;
-        MemoryStream stream;
+        bool _keepmatching = true;
+        MemoryStream _stream;
         //two global buffer queue
-        StatusQueueChecker statusQ;
-        CenterPositionChecker centerQ;
-        string txt = null;
-        int index = 0;
+        StatusQueueChecker _statusQ;
+        CenterPositionChecker _centerQ;
+        string _txt;
+        public int Index { get; } = 0;
         //bitmapsource to buffer modelimage and observed image
-        Image<Bgr, Byte> model, observed;
-        BitmapImage bitmapImage;
+        Image<Bgr, Byte> _model, _observed;
+        BitmapImage _bitmapImage;
         //parameters for surf 
-        SurfProcessor cpu = new SurfProcessor();
-        long time; double area; int areathreshold = 500; System.Drawing.Point center;
-        double flag = -5;
-        public Guide(MainWindow mw)
+        SurfProcessor _cpu = new SurfProcessor();
+        long _time; double _area; int _areathreshold = 500; Point _center;
+        double _flag = -5;
+        public Guide()
         {
-            father = mw;
             InitializeComponent();
-            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            IFormatter formatter = new BinaryFormatter();
             Stream fs = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "\\obj\\route_node.obj");
-            head = (RouteNode)formatter.Deserialize(fs);
+            _head = (RouteNode)formatter.Deserialize(fs);
             fs.Dispose();
-            statusQ = new StatusQueueChecker(4);
-            centerQ = new CenterPositionChecker(10, 420, 380);
-            head.GetNextNode(out model, out txt);
+            _statusQ = new StatusQueueChecker(4);
+            _centerQ = new CenterPositionChecker(10, 420, 380);
+            _head.GetNextNode(out _model, out _txt);
             
             InitBetterTogether();
         }
-        private void auto_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            this.Hide();
-            father.Show();
-        }
+       
         private void InitBetterTogether()
         {
             // Initializes the device discovery service. By default NFC pairing is disabled, and WiFi broadcast pairing is enabled.
@@ -84,7 +71,7 @@ namespace Auto_Guide
                 // Start device discovery through NFC pairing. The connection will be established using Wi-Fi.
                 DeviceFinder.Start(ConnectionActionType.WIFI);
             }
-            catch (Exception exp)
+            catch (Exception )
             {
                 //MessageBox.Show(exp.Message);
             }
@@ -128,10 +115,10 @@ namespace Auto_Guide
                     _device.CameraManager.GetAvailableCaptureResolutions(
                     CameraLocation.Back)[0]
                     );
-            ell_flag.Fill = System.Windows.Media.Brushes.Green;
-            ell_flag.Stroke = System.Windows.Media.Brushes.Green;
+            ell_flag.Fill = Brushes.Green;
+            ell_flag.Stroke = Brushes.Green;
             // Please notice the preview resolution is different to capture resolution
-            await _camera.SetPreviewResolutionAsync(new System.Windows.Size(800, 448));
+            await _camera.SetPreviewResolutionAsync(new Size(800, 448));
             _camera.PreviewFrameAvailable += _camera_PreviewFrameAvailable;
         }
 
@@ -139,60 +126,62 @@ namespace Auto_Guide
         {
             try
             {
-                stream = new System.IO.MemoryStream(e.Frame.ImageStream);
-                if (null == stream)
+                _stream = new MemoryStream(e.Frame.ImageStream);
+                if (null == _stream)
                     return;
                 await Application.Current.Dispatcher.BeginInvoke(
-                    System.Windows.Threading.DispatcherPriority.Background,
+                    DispatcherPriority.Background,
                     new Action(() =>
                     {
                         try
                         {
-                            bitmapImage = new BitmapImage();
-                            bitmapImage.BeginInit();
-                            bitmapImage.StreamSource = stream;   // Copy stream to local
-                            bitmapImage.EndInit();
+                            _bitmapImage = new BitmapImage();
+                            _bitmapImage.BeginInit();
+                            _bitmapImage.StreamSource = _stream;   // Copy stream to local
+                            _bitmapImage.EndInit();
                             #region MatchAndFindHomography
-                            observed = new Image<Bgr, byte>(UIHandler.bmimg2bitmap(bitmapImage));
-                            UIHandler.show_Image(cam, model);
-                            model.Save("D:\\1.jpg");
-                            Image<Gray, Byte> m_g = new Image<Gray, Byte>(model.ToBitmap());
-                            Image<Gray, Byte> o_g = new Image<Gray, Byte>(observed.ToBitmap());
-                            if (keepmatching)
+                            _observed = new Image<Bgr, byte>(UiHandler.Bmimg2Bitmap(_bitmapImage));
+                            UiHandler.show_Image(cam, _model);
+                            _model.Save("D:\\1.jpg");
+                            var mG = new Image<Gray, Byte>(_model.ToBitmap());
+                            var oG = new Image<Gray, Byte>(_observed.ToBitmap());
+                            if (_keepmatching)
                             {
-                                Image<Bgr, Byte> res = cpu.DrawResult(m_g, o_g, out time, out area, areathreshold, out center/*,out distance*/);
+                                var res = _cpu.DrawResult(mG, oG, out _time, out _area, _areathreshold, out _center/*,out distance*/);
                                 //res.Save("D:\\res_" + (++index) + ".jpg");
-                                cam_right.Source = UIHandler.ToBitmapSource(res.ToBitmap());
+                                cam_right.Source = UiHandler.ToBitmapSource(res.ToBitmap());
                                 #endregion
 
                                 #region StablizeTheResultWithQueue
-                                statusQ.EnQ(area);
-                                if (statusQ.CheckMatch(areathreshold))
+                                _statusQ.EnQ(_area);
+                                if (_statusQ.CheckMatch(_areathreshold))
                                 {
 
-                                    lbtime.Content = time.ToString("f2") + "\tms";
-                                    lbarea.Content = area.ToString();
+                                    lbtime.Content = _time.ToString("f2") + "\tms";
+                                    lbarea.Content = _area.ToString(CultureInfo.InvariantCulture);
                                     signal.Fill = Brushes.Green;
                                     MorNM.Content = "Matched";
-                                    centerQ.EnQ(center);
-                                    string Indicator = centerQ.CheckPosition();
-                                    UIHandler.TellDirection(direction, txt_direction, Indicator);
+                                    _centerQ.EnQ(_center);
+                                    var indicator = _centerQ.CheckPosition();
+                                    UiHandler.TellDirection(direction, txt_direction, indicator);
 
                                     #region estimate-distance
                                     //use area
-                                    if (area > 250000/4)
-                                    { flag += 1; flag = flag > 5 ? 5 : flag; }
+                                    if (_area > 128000)
+                                    { _flag += 1; _flag = _flag > 5 ? 5 : _flag; }
                                     else
-                                    { flag -= 1; flag = flag < -5 ? -5 : flag; };
+                                    { _flag -= 1; _flag = _flag < -5 ? -5 : _flag; }
 
 
-                                    if (flag > -3)
+                                    if (_flag > -3)
                                     {
-                                        flag = -5;keepmatching = false;
-                                        if ((head.Count - head.Index) == 0) { MessageBox.Show("Finished!");this.Close(); }
-                                        else MessageBox.Show("Reached Node\t" + (head.Index) + "\n" + head.Count + "\tNodes in total\n" + (head.Count - head.Index) + "\tNodes Ahead\nDirective:" + txt);
-                                        keepmatching = true;
-                                        head.GetNextNode(out model, out txt);
+                                        _flag = -5;_keepmatching = false;
+                                        if ((_head.Count - _head.Index) == 0) { MessageBox.Show("Finished!"); var mw = new MainWindow();
+                                            mw.Show();
+                                            Close(); }
+                                        else MessageBox.Show("Reached Node\t" + (_head.Index) + "\n" + _head.Count + "\tNodes in total\n" + (_head.Count - _head.Index) + "\tNodes Ahead\nDirective:\n" + _txt);
+                                        _keepmatching = true;
+                                        _head.GetNextNode(out _model, out _txt);
                                     }
                                     else txt_dist.Content = null;
                                 }
@@ -208,12 +197,19 @@ namespace Auto_Guide
                                 #endregion
 
                             }
-                            else UIHandler.show_Image(cam_right, observed);
+                            else UiHandler.show_Image(cam_right, _observed);
                         }
-                        catch (Exception ex) { };
+                        catch (Exception )
+                        {
+                            // ignored
+                        }
+
                     }));
             }
-            catch (Exception ex) { } 
+            catch (Exception )
+            {
+                // ignored
+            }
         }
 
     }

@@ -1,70 +1,68 @@
 ﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
-using Emgu.CV;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media;
-using Emgu.CV.CvEnum;
-using Emgu.CV.Features2D;
+using System.Windows.Media.Imaging;
+using Emgu.CV;
 using Emgu.CV.Structure;
-using Emgu.CV.Util;
+using Image = System.Windows.Controls.Image;
 
 namespace Auto_Guide
 {
-    class UIHandler
+    class UiHandler
     {
-        public static  void show_Image(System.Windows.Controls.Image DEST_UI_TO_SHOW, Image<Bgr, Byte> IMAGE_TO_DISPLAY)
+        public static  void show_Image(Image destUiToShow, Image<Bgr, Byte> imageToDisplay)
         {
-            if (IMAGE_TO_DISPLAY != null)
-                DEST_UI_TO_SHOW.Source = ToBitmapSource(IMAGE_TO_DISPLAY.ToBitmap());
+            if (imageToDisplay != null)
+                destUiToShow.Source = ToBitmapSource(imageToDisplay.ToBitmap());
         }
-        public static System.Drawing.Bitmap bmimg2bitmap(System.Windows.Media.Imaging.BitmapImage img)
+        public static Bitmap Bmimg2Bitmap(BitmapImage img)
         {
-            using (MemoryStream outstream = new MemoryStream())
+            using (var outstream = new MemoryStream())
             {
-                System.Windows.Media.Imaging.BitmapEncoder enc = new System.Windows.Media.Imaging.BmpBitmapEncoder();
-                enc.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(img));
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(img));
                 enc.Save(outstream);
-                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(outstream);
+                var bitmap = new Bitmap(outstream);
                 return new Bitmap(bitmap);
             }
         }
-        [System.Runtime.InteropServices.DllImport("gdi32")]
+        [DllImport("gdi32")]
         private  static extern int DeleteObject(IntPtr o);
-        public static ImageSource ToBitmapSource(System.Drawing.Bitmap image)
+        public static ImageSource ToBitmapSource(Bitmap image)
         {
-            IntPtr ptr = image.GetHbitmap();
+            var ptr = image.GetHbitmap();
 
-            ImageSource bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+            ImageSource bs = Imaging.CreateBitmapSourceFromHBitmap(
                 ptr,
                 IntPtr.Zero,
                 Int32Rect.Empty,
-                System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                BitmapSizeOptions.FromEmptyOptions());
 
             DeleteObject(ptr);
 
             return bs;
         }
-        public static void TellDirection(System.Windows.Controls.Image DEST_IMG_TO_SHOW,System.Windows.Controls.Label DEST_TXT_TO_SHOW,string DIRECTION_TXT)
+        public static void TellDirection(Image destImgToShow,Label destTxtToShow,string directionTxt)
         {
-            switch (DIRECTION_TXT)
+            switch (directionTxt)
             {
                 case "Turn Left!":
-                    UIHandler.show_Image(DEST_IMG_TO_SHOW, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\left.jpg"));
-                    DEST_TXT_TO_SHOW.Content = "Turn Left!";
+                    show_Image(destImgToShow, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\left.jpg"));
+                    destTxtToShow.Content = "Turn Left!";
                     break;
                 case "Turn Right!":
-                    UIHandler.show_Image(DEST_IMG_TO_SHOW, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\right.jpg"));
-                    DEST_TXT_TO_SHOW.Content = "Turn Right!";
+                    show_Image(destImgToShow, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\right.jpg"));
+                    destTxtToShow.Content = "Turn Right!";
                     break;
                 case "Go Straight!":
-                    UIHandler.show_Image(DEST_IMG_TO_SHOW, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\straight.jpg"));
-                    DEST_TXT_TO_SHOW.Content = "Go Straight!";
+                    show_Image(destImgToShow, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\straight.jpg"));
+                    destTxtToShow.Content = "Go Straight!";
                     break;
-                default: break;
             }
         }
     }

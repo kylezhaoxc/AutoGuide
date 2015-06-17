@@ -1,54 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Drawing;
 
 namespace Auto_Guide
 {
     class QueueChecker<T>
     {
-        protected Queue<T> target;
-        protected int Max_Len, Acc_Len;
+        protected Queue<T> Target;
+        protected int MaxLen, AccLen;
         public QueueChecker(int len)
         {
-            Max_Len = len;
-            target = new Queue<T>(len);
-            Acc_Len = Max_Len /4;
+            MaxLen = len;
+            Target = new Queue<T>(len);
+            AccLen = MaxLen /4;
         }
         public void EnQ(T element)
         {
-            target.Enqueue(element);
-            if (target.Count > Max_Len) target.Dequeue();
+            Target.Enqueue(element);
+            if (Target.Count > MaxLen) Target.Dequeue();
         }
        
     }
-    class CenterPositionChecker : QueueChecker<System.Drawing.Point>
+    class CenterPositionChecker : QueueChecker<Point>
     {
-        private int xmax;//= 420;
-        private int xmin; //= 220;
-        public CenterPositionChecker(int len,int max_x,int max_y) :base(len)
+        private int _xmax;//= 420;
+        private int _xmin; //= 220;
+        public CenterPositionChecker(int len,int maxX,int maxY) :base(len)
         {
-            xmax = max_x;
-            xmin = max_y;
-            Acc_Len = Max_Len / 2;
+            _xmax = maxX;
+            _xmin = maxY;
+            AccLen = MaxLen / 2;
         }
         public string CheckPosition()
         {
-            string Direction = null;
-            Direction = "N/A";
+            string direction;
+            direction = "N/A";
             int leftvote = 0, rightvote = 0, centervote = 0;
-            foreach (System.Drawing.Point center in target)
+            foreach (var center in Target)
             {
-                if (center.X > xmax) rightvote++;
-                if (center.X < xmin) leftvote++;
-                if (center.X > xmin && center.X < xmax) centervote++;
+                if (center.X > _xmax) rightvote++;
+                if (center.X < _xmin) leftvote++;
+                if (center.X > _xmin && center.X < _xmax) centervote++;
             }
-            if (leftvote > Acc_Len) return "Turn Left!";
-            if (rightvote >  Acc_Len) return "Turn Right!";
-            if (centervote >  Acc_Len) return "Go Straight!";
+            if (leftvote > AccLen) return "Turn Left!";
+            if (rightvote >  AccLen) return "Turn Right!";
+            if (centervote >  AccLen) return "Go Straight!";
 
-            return Direction;
+            return direction;
         }
     }
      class StatusQueueChecker : QueueChecker<double>
@@ -57,13 +54,13 @@ namespace Auto_Guide
         { }
         public bool CheckMatch(int areathreshold)
         {
-        int positivematch = 0;
-            foreach (double area in target)
+        var positivematch = 0;
+            foreach (var area in Target)
             {
                 positivematch += area > areathreshold ? 1 : 0;
             }
-            if (positivematch < Acc_Len) return false;
-            else return true;
+            if (positivematch < AccLen) return false;
+            return true;
         }
     }
 }
