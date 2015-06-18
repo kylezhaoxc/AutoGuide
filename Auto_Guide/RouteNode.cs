@@ -6,39 +6,50 @@ using Emgu.CV.Structure;
 namespace Auto_Guide
 {
     [Serializable]
-    class RouteNode
+    class RouteNode :IDisposable
     {
-        private int _count;
-        private int _index;
-        public int Count { get { return _count; } }
-        public int Index { get { return _index; } }
+        public int Count { get; private set; }
+
+        public int Index { get;  set; }
+
         private static RouteNode _head;
-        private List<Image<Bgr, Byte>> _nodeImages=new List<Image<Bgr, byte>>();
+        private List<Image<Bgr, byte>> _nodeImages=new List<Image<Bgr, byte>>();
         private List<string> _nodeDirectives=new List<string>();
         public static RouteNode GetHead()
         {
-            if (_head == null) { _head = new RouteNode(); _head._count = 0;_head._index = 0; return _head; }
+            if (_head == null) {
+                _head = new RouteNode
+                {
+                    Count = 0,
+                    Index = 0
+                };
+                return _head; }
             return _head;
         }
 
-        public void AddNode(Image<Bgr,Byte> img, string txt)
+        public void AddNode(Image<Bgr,byte> img, string txt)
         {
             if (img != null && txt != null)
             {
                 _nodeImages.Add(img);
                 _nodeDirectives.Add(txt);
-                _count++;
+                Count++;
             }
         }
-        public void GetNextNode(out Image<Bgr, Byte> image, out string txt)
+        public void GetNextNode(out Image<Bgr, byte> image, out string txt)
         {
             image = null;txt = null;
-            if (_index <=_count)
+            if (Index <Count)
             {
-                image=_nodeImages[_index];
-                txt=_nodeDirectives[_index];
-                _index++; 
+                image=_nodeImages[Index];
+                txt=_nodeDirectives[Index];
+                Index++; 
             }
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

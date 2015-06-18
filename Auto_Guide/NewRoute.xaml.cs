@@ -22,7 +22,7 @@ namespace Auto_Guide
         ICamera _camera;
         BitmapImage _bitmapImage;
         MemoryStream _stream;
-        Image<Bgr, Byte> _nodepic;
+        Image<Bgr, byte> _nodepic;
         RouteNode _head = RouteNode.GetHead();
         int _count;
         public NewRoute( )

@@ -20,41 +20,68 @@ namespace Auto_Guide
     /// <summary>
     /// Interaction logic for Guide.xaml
     /// </summary>
-    public partial class Guide 
+    public partial class Guide
     {
         public List<Image<Bgr, byte>> NodeImages { get; } = new List<Image<Bgr, byte>>();
         public List<string> NodeDirectives { get; } = new List<string>();
-        readonly RouteNode _head;
-        IPairedDevice _device;
-        ICamera _camera;
-        bool _keepmatching = true;
-        MemoryStream _stream;
+        private IPairedDevice _device;
+        private ICamera _camera;
+        private bool _keepmatching = true;
+        private MemoryStream _stream;
         //two global buffer queue
-        StatusQueueChecker _statusQ;
-        CenterPositionChecker _centerQ;
-        string _txt;
-        public int Index { get; } = 0;
+        private StatusQueueChecker _statusQ;
+        private CenterPositionChecker _centerQ;
+        private string _txt;
+        public int Index { get; set; } = -1;
+        public int Count { get; set; }
+        public List<string> DirectiveList;
+
+
         //bitmapsource to buffer modelimage and observed image
-        Image<Bgr, Byte> _model, _observed;
-        BitmapImage _bitmapImage;
+        private Image<Bgr, byte> _model, _observed;
+        private BitmapImage _bitmapImage;
         //parameters for surf 
-        SurfProcessor _cpu = new SurfProcessor();
-        long _time; double _area; int _areathreshold = 500; Point _center;
-        double _flag = -5;
+        private SurfProcessor _cpu = new SurfProcessor();
+        private long _time;
+        private double _area;
+        private int _areathreshold = 500;
+        private Point _center;
+        private double _flag = -5;
+
         public Guide()
         {
             InitializeComponent();
             IFormatter formatter = new BinaryFormatter();
             Stream fs = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "\\obj\\route_node.obj");
-            _head = (RouteNode)formatter.Deserialize(fs);
+            var head = (RouteNode) formatter.Deserialize(fs);
+            Count = head.Count;
+            DirectiveList = new List<string>(Count);
             fs.Dispose();
             _statusQ = new StatusQueueChecker(4);
             _centerQ = new CenterPositionChecker(10, 420, 380);
-            _head.GetNextNode(out _model, out _txt);
-            
+            while (head.Index < head.Count)
+            {
+                head.GetNextNode(out _model, out _txt);
+                DirectiveList.Add(_txt);
+                _model.Save(AppDomain.CurrentDomain.BaseDirectory + "\\obj\\images\\ref_" + head.Index + ".jpg");
+            }
+            head.Dispose();
+            SwitchToNextRef(out _txt, out _model);
+            _model.Save("D:\\temp\\" + (Index + 1) + ".jpg");
             InitBetterTogether();
         }
-       
+
+        private void SwitchToNextRef(out string txt, out Image<Bgr, byte> refImage)
+        {
+            refImage =  null;txt = null;
+            if (Index <= Count)
+            {
+                txt = DirectiveList[++Index];
+                refImage =new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\obj\\images\\ref_" + (Index+1) +".jpg");
+            }
+            
+        }
+
         private void InitBetterTogether()
         {
             // Initializes the device discovery service. By default NFC pairing is disabled, and WiFi broadcast pairing is enabled.
@@ -142,9 +169,8 @@ namespace Auto_Guide
                             #region MatchAndFindHomography
                             _observed = new Image<Bgr, byte>(UiHandler.Bmimg2Bitmap(_bitmapImage));
                             UiHandler.show_Image(cam, _model);
-                            _model.Save("D:\\1.jpg");
-                            var mG = new Image<Gray, Byte>(_model.ToBitmap());
-                            var oG = new Image<Gray, Byte>(_observed.ToBitmap());
+                            var mG = new Image<Gray, byte>(_model.ToBitmap());
+                            var oG = new Image<Gray, byte>(_observed.ToBitmap());
                             if (_keepmatching)
                             {
                                 var res = _cpu.DrawResult(mG, oG, out _time, out _area, _areathreshold, out _center/*,out distance*/);
@@ -176,12 +202,22 @@ namespace Auto_Guide
                                     if (_flag > -3)
                                     {
                                         _flag = -5;_keepmatching = false;
-                                        if ((_head.Count - _head.Index) == 0) { MessageBox.Show("Finished!"); var mw = new MainWindow();
+
+                                        if (Count == (Index+1))
+                                        {
+                                            MessageBox.Show("Finished!");
+                                            var mw = new MainWindow();
                                             mw.Show();
-                                            Close(); }
-                                        else MessageBox.Show("Reached Node\t" + (_head.Index) + "\n" + _head.Count + "\tNodes in total\n" + (_head.Count - _head.Index) + "\tNodes Ahead\nDirective:\n" + _txt);
-                                        _keepmatching = true;
-                                        _head.GetNextNode(out _model, out _txt);
+                                            Close();
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Reached Node\t" + (Index+1) + "\n" + Count + "\tNodes in total\n" + (Count - Index-1) + "\tNodes Ahead\nDirective:\n" + _txt);
+                                            _keepmatching = true;
+                                          SwitchToNextRef(out _txt,out _model);
+                                            _model.Save("D:\\temp\\"+(Index+1)+".jpg");
+                                        }
+                                        
                                     }
                                     else txt_dist.Content = null;
                                 }

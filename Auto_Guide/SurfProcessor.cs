@@ -80,7 +80,7 @@ namespace Auto_Guide
             return dist;
         }*/
         #endregion
-        public  Image<Bgr, Byte> DrawResult(Image<Gray, Byte> modelImage, Image<Gray, byte> observedImage, out long matchTime,out double area,int minarea,out Point center)
+        public  Image<Bgr, byte> DrawResult(Image<Gray, byte> modelImage, Image<Gray, byte> observedImage, out long matchTime,out double area,int minarea,out Point center)
         {
             //double estimated_dist =99999;
             center = new Point(400,224);
@@ -183,7 +183,7 @@ namespace Auto_Guide
                     center = new Point(Convert.ToInt32(xsum / 4), Convert.ToInt32(ysum / 4));
                     if (area > minarea)
                     {
-                        var temp = new Image<Bgr, Byte>(result.Width, result.Height);
+                        var temp = new Image<Bgr, byte>(result.Width, result.Height);
                         temp.DrawPolyline(Array.ConvertAll(pts, Point.Round), true, new Bgr(Color.Red), 5);
                     //estimated_dist = GetDist(pts);
                    

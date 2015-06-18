@@ -15,7 +15,7 @@ namespace Auto_Guide
 {
     class UiHandler
     {
-        public static  void show_Image(Image destUiToShow, Image<Bgr, Byte> imageToDisplay)
+        public static  void show_Image(Image destUiToShow, Image<Bgr, byte> imageToDisplay)
         {
             if (imageToDisplay != null)
                 destUiToShow.Source = ToBitmapSource(imageToDisplay.ToBitmap());
