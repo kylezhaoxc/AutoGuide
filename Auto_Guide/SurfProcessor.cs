@@ -119,14 +119,16 @@ namespace Auto_Guide
                     return null; }
             
             //使用BF匹配算法，匹配特征向量    
-            var matcher = new BruteForceMatcher<float>(DistanceType.L2);
-                matcher.Add(modelDescriptors);
+            //var bfmatcher = new BruteForceMatcher<float>(DistanceType.L2);
+            //bfmatcher.Add(modelDescriptors);
                 var indices = new Matrix<int>(observedDescriptors.Rows, k);
+            var flannMatcher= new Emgu.CV.Flann.Index(modelDescriptors,4);
             //通过特征向量筛选匹配对
                 using (var dist = new Matrix<float>(observedDescriptors.Rows, k))
                 {
-                    //最近邻2点特征向量匹配
-                    matcher.KnnMatch(observedDescriptors, indices, dist, k, null);
+                //最近邻2点特征向量匹配
+                //bfmatcher.KnnMatch(observedDescriptors, indices, dist, k, null);
+                flannMatcher.KnnSearch(observedDescriptors,indices,dist,k,24);
                     //匹配成功的，将特征点存入mask
                     mask = new Matrix<byte>(dist.Rows, 1);
                     mask.SetValue(255);
@@ -151,7 +153,8 @@ namespace Auto_Guide
             //Image<Bgr, Byte> result = Features2DToolbox.DrawMatches(modelImage, modelKeyPoints, observedImage, observedKeyPoints,indices, new Bgr(0, 0, 255), new Bgr(0, 255, 0), mask, Features2DToolbox.KeypointDrawType.DEFAULT);
            // result.Save("D:\\temp\\matchedpoints.jpg");
             observedImage.ToBitmap();
-                var result = Features2DToolbox.DrawMatches(modelImage, modelKeyPoints, observedImage, observedKeyPoints, indices, new Bgr(0, 0, 255), new Bgr(0, 255, 0), mask, Features2DToolbox.KeypointDrawType.DEFAULT); ;
+                var result = Features2DToolbox.DrawMatches(modelImage, modelKeyPoints, observedImage, observedKeyPoints, indices, new Bgr(0, 0, 255), new Bgr(0, 255, 0), mask, Features2DToolbox.KeypointDrawType.DEFAULT);
+
             #region draw the projected region on the Image
             //画出单应矩阵
                 if (homography != null)
