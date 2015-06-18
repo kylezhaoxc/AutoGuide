@@ -22,6 +22,9 @@ namespace Auto_Guide
     /// </summary>
     public partial class Guide
     {
+        #region DEFINE_VARIETIES_OF_THE_CLASS
+        public int Index { get; set; } = -1;
+        public int Count { get; set; }
         private readonly int _areathreshold = 500;
         private readonly CenterPositionChecker _centerQ;
         //parameters for surf 
@@ -41,10 +44,11 @@ namespace Auto_Guide
         private long _time;
         private string _txt;
         public List<string> DirectiveList;
-
+        #endregion
         public Guide()
         {
             InitializeComponent();
+            #region LOAD_REFERENCE_TO_DISK_AND_INIT_VARS
             IFormatter formatter = new BinaryFormatter();
             Stream fs = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "\\obj\\route_node.obj");
             var head = (RouteNode) formatter.Deserialize(fs);
@@ -62,25 +66,23 @@ namespace Auto_Guide
             head.Dispose();
             SwitchToNextRef(out _txt, out _model);
             _model.Save("D:\\temp\\" + (Index + 1) + ".jpg");
+            #endregion
             InitBetterTogether();
         }
 
-        public int Index { get; set; } = -1;
-        public int Count { get; set; }
+        
 
         private void SwitchToNextRef(out string txt, out Image<Bgr, byte> refImage)
         {
             refImage = null;
             txt = null;
-            if (Index <= Count)
-            {
-                txt = DirectiveList[++Index];
-                refImage =
-                    new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\obj\\images\\ref_" + (Index + 1) +
-                                         ".jpg");
-            }
+            if (Index > Count) return;
+            txt = DirectiveList[++Index];
+            refImage =
+                new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\obj\\images\\ref_" + (Index + 1) +
+                                     ".jpg");
         }
-
+        #region INIT_BETTER_TOGETHER__BINDING_DELEGATES
         private void InitBetterTogether()
         {
             // Initializes the device discovery service. By default NFC pairing is disabled, and WiFi broadcast pairing is enabled.
@@ -102,8 +104,11 @@ namespace Auto_Guide
                 //MessageBox.Show(exp.Message);
             }
         }
+        #endregion
 
-        private void DeviceFinder_DeviceConnectionAccepting(object sender, ConnectionAcceptingEventArgs e)
+
+        #region DEFINE_ACTIONS_WHEN_CONNECTION_STATUS_CHANGED
+        private static void DeviceFinder_DeviceConnectionAccepting(object sender, ConnectionAcceptingEventArgs e)
         {
             e.ConnectionDeferral.AcceptAlways();
         }
@@ -147,11 +152,14 @@ namespace Auto_Guide
             await _camera.SetPreviewResolutionAsync(new Size(800, 448));
             _camera.PreviewFrameAvailable += _camera_PreviewFrameAvailable;
         }
-
+        #endregion
+        
+        #region PROCEED_FRAMES
         private async void _camera_PreviewFrameAvailable(object sender, PreviewArrivedEventArgs e)
         {
             try
             {
+                #region LOAD_THE_FRAME_IN_ASYNC_WAY
                 _stream = new MemoryStream(e.Frame.ImageStream);
                 if (null == _stream)
                     return;
@@ -165,8 +173,9 @@ namespace Auto_Guide
                             _bitmapImage.BeginInit();
                             _bitmapImage.StreamSource = _stream; // Copy stream to local
                             _bitmapImage.EndInit();
+                            #endregion
 
-                            #region MatchAndFindHomography
+                            #region Match_And_Find_Homography
 
                             _observed = new Image<Bgr, byte>(UiHandler.Bmimg2Bitmap(_bitmapImage));
                             UiHandler.show_Image(cam, _model);
@@ -181,7 +190,7 @@ namespace Auto_Guide
 
                                 #endregion
 
-                                #region StablizeTheResultWithQueue
+                                #region Stablize_The_Result_With_Queue
 
                                 _statusQ.EnQ(_area);
                                 if (_statusQ.CheckMatch(_areathreshold))
@@ -258,5 +267,6 @@ namespace Auto_Guide
                 // ignored
             }
         }
+        #endregion
     }
 }
