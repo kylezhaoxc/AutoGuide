@@ -1,39 +1,43 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace Auto_Guide
 {
-    class QueueChecker<T>
+    internal class QueueChecker<T>
     {
-        protected Queue<T> Target;
         protected int MaxLen, AccLen;
+        protected Queue<T> Target;
+
         public QueueChecker(int len)
         {
             MaxLen = len;
             Target = new Queue<T>(len);
-            AccLen = MaxLen /4;
+            AccLen = MaxLen/4;
         }
+
         public void EnQ(T element)
         {
             Target.Enqueue(element);
             if (Target.Count > MaxLen) Target.Dequeue();
         }
-       
     }
-    class CenterPositionChecker : QueueChecker<Point>
+
+    internal class CenterPositionChecker : QueueChecker<Point>
     {
-        private int _xmax;//= 420;
-        private int _xmin; //= 220;
-        public CenterPositionChecker(int len,int maxX,int maxY) :base(len)
+        private readonly int _xmax; //= 420;
+        private readonly int _xmin; //= 220;
+
+        public CenterPositionChecker(int len, int maxX, int maxY) : base(len)
         {
             _xmax = maxX;
             _xmin = maxY;
-            AccLen = MaxLen / 2;
+            AccLen = MaxLen/2;
         }
+
         public string CheckPosition()
         {
-            string direction;
-            direction = "N/A";
+            const string direction = "N/A";
             int leftvote = 0, rightvote = 0, centervote = 0;
             foreach (var center in Target)
             {
@@ -42,25 +46,23 @@ namespace Auto_Guide
                 if (center.X > _xmin && center.X < _xmax) centervote++;
             }
             if (leftvote > AccLen) return "Turn Left!";
-            if (rightvote >  AccLen) return "Turn Right!";
-            if (centervote >  AccLen) return "Go Straight!";
+            if (rightvote > AccLen) return "Turn Right!";
+            if (centervote > AccLen) return "Go Straight!";
 
             return direction;
         }
     }
-     class StatusQueueChecker : QueueChecker<double>
+
+    internal class StatusQueueChecker : QueueChecker<double>
     {
         public StatusQueueChecker(int len) : base(len)
-        { }
+        {
+        }
+
         public bool CheckMatch(int areathreshold)
         {
-        var positivematch = 0;
-            foreach (var area in Target)
-            {
-                positivematch += area > areathreshold ? 1 : 0;
-            }
-            if (positivematch < AccLen) return false;
-            return true;
+            var positivematch = Target.Sum(area => area > areathreshold ? 1 : 0);
+            return positivematch >= AccLen;
         }
     }
 }

@@ -13,13 +13,14 @@ using Image = System.Windows.Controls.Image;
 
 namespace Auto_Guide
 {
-    class UiHandler
+    internal class UiHandler
     {
-        public static  void show_Image(Image destUiToShow, Image<Bgr, byte> imageToDisplay)
+        public static void show_Image(Image destUiToShow, Image<Bgr, byte> imageToDisplay)
         {
             if (imageToDisplay != null)
                 destUiToShow.Source = ToBitmapSource(imageToDisplay.ToBitmap());
         }
+
         public static Bitmap Bmimg2Bitmap(BitmapImage img)
         {
             using (var outstream = new MemoryStream())
@@ -31,8 +32,10 @@ namespace Auto_Guide
                 return new Bitmap(bitmap);
             }
         }
+
         [DllImport("gdi32")]
-        private  static extern int DeleteObject(IntPtr o);
+        private static extern int DeleteObject(IntPtr o);
+
         public static ImageSource ToBitmapSource(Bitmap image)
         {
             var ptr = image.GetHbitmap();
@@ -47,20 +50,24 @@ namespace Auto_Guide
 
             return bs;
         }
-        public static void TellDirection(Image destImgToShow,Label destTxtToShow,string directionTxt)
+
+        public static void TellDirection(Image destImgToShow, Label destTxtToShow, string directionTxt)
         {
             switch (directionTxt)
             {
                 case "Turn Left!":
-                    show_Image(destImgToShow, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\left.jpg"));
+                    show_Image(destImgToShow,
+                        new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\left.jpg"));
                     destTxtToShow.Content = "Turn Left!";
                     break;
                 case "Turn Right!":
-                    show_Image(destImgToShow, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\right.jpg"));
+                    show_Image(destImgToShow,
+                        new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\right.jpg"));
                     destTxtToShow.Content = "Turn Right!";
                     break;
                 case "Go Straight!":
-                    show_Image(destImgToShow, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\straight.jpg"));
+                    show_Image(destImgToShow,
+                        new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\straight.jpg"));
                     destTxtToShow.Content = "Go Straight!";
                     break;
             }

@@ -14,26 +14,31 @@ using Emgu.CV.Structure;
 namespace Auto_Guide
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class NewRoute : IDisposable
     {
-        IPairedDevice _device;
-        ICamera _camera;
-        BitmapImage _bitmapImage;
-        MemoryStream _stream;
-        Image<Bgr, byte> _nodepic;
-        RouteNode _head = RouteNode.GetHead();
-        int _count;
-        public NewRoute( )
+        private readonly RouteNode _head = RouteNode.GetHead();
+        private BitmapImage _bitmapImage;
+        private ICamera _camera;
+        private int _count;
+        private IPairedDevice _device;
+        private Image<Bgr, byte> _nodepic;
+        private MemoryStream _stream;
+
+        public NewRoute()
         {
             InitializeComponent();
             btn_unlock.IsEnabled = false;
-            btn_update_node.IsEnabled = false ;
+            btn_update_node.IsEnabled = false;
             btn_up_all_node.IsEnabled = false;
             InitBetterTogether();
         }
-        void IDisposable.Dispose() { }
+
+        void IDisposable.Dispose()
+        {
+        }
+
         private void InitBetterTogether()
         {
             // Initializes the device discovery service. By default NFC pairing is disabled, and WiFi broadcast pairing is enabled.
@@ -56,12 +61,12 @@ namespace Auto_Guide
             }
         }
 
-        void DeviceFinder_DeviceConnectionAccepting(object sender, ConnectionAcceptingEventArgs e)
+        private void DeviceFinder_DeviceConnectionAccepting(object sender, ConnectionAcceptingEventArgs e)
         {
             e.ConnectionDeferral.AcceptAlways();
         }
 
-        void DeviceFinder_ConnectionStatusChanged(object sender, ConnectionStatusChangedEventArgs e)
+        private void DeviceFinder_ConnectionStatusChanged(object sender, ConnectionStatusChangedEventArgs e)
         {
             switch (e.ConnectionStatus)
             {
@@ -90,16 +95,17 @@ namespace Auto_Guide
             // resolution we want for the incoming video.
             // Here we use the 1st available resolution
             _camera = await _device.CameraManager.OpenAsync(
-                    CameraLocation.Back,
-                    _device.CameraManager.GetAvailableCaptureResolutions(
+                CameraLocation.Back,
+                _device.CameraManager.GetAvailableCaptureResolutions(
                     CameraLocation.Back)[0]
-                    );
+                );
             ell_flag.Fill = Brushes.Green;
             ell_flag.Stroke = Brushes.Green;
             // Please notice the preview resolution is different to capture resolution
             await _camera.SetPreviewResolutionAsync(new Size(800, 448));
             _camera.PreviewFrameAvailable += _camera_PreviewFrameAvailable;
         }
+
         private async void _camera_PreviewFrameAvailable(object sender, PreviewArrivedEventArgs e)
         {
             try
@@ -118,20 +124,18 @@ namespace Auto_Guide
                         {
                             _bitmapImage = new BitmapImage();
                             _bitmapImage.BeginInit();
-                            _bitmapImage.StreamSource = _stream;   // Copy stream to local
+                            _bitmapImage.StreamSource = _stream; // Copy stream to local
                             _bitmapImage.EndInit();
-                            if (_nodepic == null) cam.Source = _bitmapImage;
-                            else cam.Source = UiHandler.ToBitmapSource(_nodepic.ToBitmap());
+                            cam.Source = _nodepic == null ? _bitmapImage : UiHandler.ToBitmapSource(_nodepic.ToBitmap());
                         }
 
-                        catch (Exception )
+                        catch (Exception)
                         {
                             // ignored
                         }
-                
                     }));
             }
-            catch (Exception )
+            catch (Exception)
             {
                 // ignored
             }
@@ -139,7 +143,7 @@ namespace Auto_Guide
 
         private void btn_cam_Click(object sender, RoutedEventArgs e)
         {
-           _nodepic= new Image<Bgr, byte>(UiHandler.Bmimg2Bitmap(_bitmapImage));
+            _nodepic = new Image<Bgr, byte>(UiHandler.Bmimg2Bitmap(_bitmapImage));
             btn_unlock.IsEnabled = true;
             btn_cam.IsEnabled = false;
             btn_update_node.IsEnabled = true;
@@ -172,7 +176,7 @@ namespace Auto_Guide
             Stream fs = File.OpenWrite(AppDomain.CurrentDomain.BaseDirectory + "\\obj\\route_node.obj");
             formatter.Serialize(fs, rn);
             fs.Dispose();
-            var mw=new MainWindow();
+            var mw = new MainWindow();
             mw.Show();
             Close();
         }

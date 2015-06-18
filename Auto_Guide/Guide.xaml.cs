@@ -18,35 +18,29 @@ using Size = System.Windows.Size;
 namespace Auto_Guide
 {
     /// <summary>
-    /// Interaction logic for Guide.xaml
+    ///     Interaction logic for Guide.xaml
     /// </summary>
     public partial class Guide
     {
-        public List<Image<Bgr, byte>> NodeImages { get; } = new List<Image<Bgr, byte>>();
-        public List<string> NodeDirectives { get; } = new List<string>();
-        private IPairedDevice _device;
-        private ICamera _camera;
-        private bool _keepmatching = true;
-        private MemoryStream _stream;
+        private readonly int _areathreshold = 500;
+        private readonly CenterPositionChecker _centerQ;
+        //parameters for surf 
+        private readonly SurfProcessor _cpu = new SurfProcessor();
         //two global buffer queue
-        private StatusQueueChecker _statusQ;
-        private CenterPositionChecker _centerQ;
-        private string _txt;
-        public int Index { get; set; } = -1;
-        public int Count { get; set; }
-        public List<string> DirectiveList;
-
-
+        private readonly StatusQueueChecker _statusQ;
+        private double _area;
+        private BitmapImage _bitmapImage;
+        private ICamera _camera;
+        private Point _center;
+        private IPairedDevice _device;
+        private double _flag = -5;
+        private bool _keepmatching = true;
         //bitmapsource to buffer modelimage and observed image
         private Image<Bgr, byte> _model, _observed;
-        private BitmapImage _bitmapImage;
-        //parameters for surf 
-        private SurfProcessor _cpu = new SurfProcessor();
+        private MemoryStream _stream;
         private long _time;
-        private double _area;
-        private int _areathreshold = 500;
-        private Point _center;
-        private double _flag = -5;
+        private string _txt;
+        public List<string> DirectiveList;
 
         public Guide()
         {
@@ -71,15 +65,20 @@ namespace Auto_Guide
             InitBetterTogether();
         }
 
+        public int Index { get; set; } = -1;
+        public int Count { get; set; }
+
         private void SwitchToNextRef(out string txt, out Image<Bgr, byte> refImage)
         {
-            refImage =  null;txt = null;
+            refImage = null;
+            txt = null;
             if (Index <= Count)
             {
                 txt = DirectiveList[++Index];
-                refImage =new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\obj\\images\\ref_" + (Index+1) +".jpg");
+                refImage =
+                    new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\obj\\images\\ref_" + (Index + 1) +
+                                         ".jpg");
             }
-            
         }
 
         private void InitBetterTogether()
@@ -98,18 +97,18 @@ namespace Auto_Guide
                 // Start device discovery through NFC pairing. The connection will be established using Wi-Fi.
                 DeviceFinder.Start(ConnectionActionType.WIFI);
             }
-            catch (Exception )
+            catch (Exception)
             {
                 //MessageBox.Show(exp.Message);
             }
         }
 
-        void DeviceFinder_DeviceConnectionAccepting(object sender, ConnectionAcceptingEventArgs e)
+        private void DeviceFinder_DeviceConnectionAccepting(object sender, ConnectionAcceptingEventArgs e)
         {
             e.ConnectionDeferral.AcceptAlways();
         }
 
-        void DeviceFinder_ConnectionStatusChanged(object sender, ConnectionStatusChangedEventArgs e)
+        private void DeviceFinder_ConnectionStatusChanged(object sender, ConnectionStatusChangedEventArgs e)
         {
             switch (e.ConnectionStatus)
             {
@@ -138,10 +137,10 @@ namespace Auto_Guide
             // resolution we want for the incoming video.
             // Here we use the 1st available resolution
             _camera = await _device.CameraManager.OpenAsync(
-                    CameraLocation.Back,
-                    _device.CameraManager.GetAvailableCaptureResolutions(
+                CameraLocation.Back,
+                _device.CameraManager.GetAvailableCaptureResolutions(
                     CameraLocation.Back)[0]
-                    );
+                );
             ell_flag.Fill = Brushes.Green;
             ell_flag.Stroke = Brushes.Green;
             // Please notice the preview resolution is different to capture resolution
@@ -164,25 +163,29 @@ namespace Auto_Guide
                         {
                             _bitmapImage = new BitmapImage();
                             _bitmapImage.BeginInit();
-                            _bitmapImage.StreamSource = _stream;   // Copy stream to local
+                            _bitmapImage.StreamSource = _stream; // Copy stream to local
                             _bitmapImage.EndInit();
+
                             #region MatchAndFindHomography
+
                             _observed = new Image<Bgr, byte>(UiHandler.Bmimg2Bitmap(_bitmapImage));
                             UiHandler.show_Image(cam, _model);
                             var mG = new Image<Gray, byte>(_model.ToBitmap());
                             var oG = new Image<Gray, byte>(_observed.ToBitmap());
                             if (_keepmatching)
                             {
-                                var res = _cpu.DrawResult(mG, oG, out _time, out _area, _areathreshold, out _center/*,out distance*/);
+                                var res = _cpu.DrawResult(mG, oG, out _time, out _area, _areathreshold, out _center
+                                    /*,out distance*/);
                                 //res.Save("D:\\res_" + (++index) + ".jpg");
                                 cam_right.Source = UiHandler.ToBitmapSource(res.ToBitmap());
+
                                 #endregion
 
                                 #region StablizeTheResultWithQueue
+
                                 _statusQ.EnQ(_area);
                                 if (_statusQ.CheckMatch(_areathreshold))
                                 {
-
                                     lbtime.Content = _time.ToString("f2") + "\tms";
                                     lbarea.Content = _area.ToString(CultureInfo.InvariantCulture);
                                     signal.Fill = Brushes.Green;
@@ -192,18 +195,26 @@ namespace Auto_Guide
                                     UiHandler.TellDirection(direction, txt_direction, indicator);
 
                                     #region estimate-distance
+
                                     //use area
                                     if (_area > 128000)
-                                    { _flag += 1; _flag = _flag > 5 ? 5 : _flag; }
+                                    {
+                                        _flag += 1;
+                                        _flag = _flag > 5 ? 5 : _flag;
+                                    }
                                     else
-                                    { _flag -= 1; _flag = _flag < -5 ? -5 : _flag; }
+                                    {
+                                        _flag -= 1;
+                                        _flag = _flag < -5 ? -5 : _flag;
+                                    }
 
 
                                     if (_flag > -3)
                                     {
-                                        _flag = -5;_keepmatching = false;
+                                        _flag = -5;
+                                        _keepmatching = false;
 
-                                        if (Count == (Index+1))
+                                        if (Count == (Index + 1))
                                         {
                                             MessageBox.Show("Finished!");
                                             var mw = new MainWindow();
@@ -212,16 +223,18 @@ namespace Auto_Guide
                                         }
                                         else
                                         {
-                                            MessageBox.Show("Reached Node\t" + (Index+1) + "\n" + Count + "\tNodes in total\n" + (Count - Index-1) + "\tNodes Ahead\nDirective:\n" + _txt);
+                                            MessageBox.Show("Reached Node\t" + (Index + 1) + "\n" + Count +
+                                                            "\tNodes in total\n" + (Count - Index - 1) +
+                                                            "\tNodes Ahead\nDirective:\n" + _txt);
                                             _keepmatching = true;
-                                          SwitchToNextRef(out _txt,out _model);
-                                            _model.Save("D:\\temp\\"+(Index+1)+".jpg");
+                                            SwitchToNextRef(out _txt, out _model);
+                                            _model.Save("D:\\temp\\" + (Index + 1) + ".jpg");
                                         }
-                                        
                                     }
                                     else txt_dist.Content = null;
                                 }
-                                #endregion
+                                    #endregion
+
                                 else
                                 {
                                     signal.Fill = Brushes.Red;
@@ -231,22 +244,19 @@ namespace Auto_Guide
                                 }
 
                                 #endregion
-
                             }
                             else UiHandler.show_Image(cam_right, _observed);
                         }
-                        catch (Exception )
+                        catch (Exception)
                         {
                             // ignored
                         }
-
                     }));
             }
-            catch (Exception )
+            catch (Exception)
             {
                 // ignored
             }
         }
-
     }
 }
