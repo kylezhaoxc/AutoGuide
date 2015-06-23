@@ -154,7 +154,7 @@ namespace Auto_Guide
         }
         #endregion
         
-        #region PROCEED_FRAMES
+        #region <!!!PROCEED_FRAMES!!!>
         private async void _camera_PreviewFrameAvailable(object sender, PreviewArrivedEventArgs e)
         {
             try
@@ -190,6 +190,10 @@ namespace Auto_Guide
 
                                 #endregion
 
+                                // The matching result already comes out now, but I need to make it more stable
+                                // And trigger the stop signal at the right time.
+
+
                                 #region Stablize_The_Result_With_Queue
 
                                 _statusQ.EnQ(_area);
@@ -222,7 +226,9 @@ namespace Auto_Guide
                                     {
                                         _flag = -5;
                                         _keepmatching = false;
-
+                                        //this shows there are enough positive match in the queue
+                                        // and there are enough matching area with the proper size
+                                        // which shows the object is close enough to the camera.
                                         if (Count == (Index + 1))
                                         {
                                             MessageBox.Show("Finished!");
