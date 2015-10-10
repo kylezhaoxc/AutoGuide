@@ -64,6 +64,9 @@
     <Reference Include="Emgu.Util">
       <HintPath>..\..\..\..\..\..\..\..\Emgu\emgucv-windows-universal-cuda 2.4.10.1940\bin\Emgu.Util.dll</HintPath>
     </Reference>
+    <Reference Include="Search4Match">
+      <HintPath>..\..\..\..\..\..\Desktop\Bak\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Search4Match.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -91,9 +94,6 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="QueueChecker.cs" />
-    <Compile Include="SurfProcessor.cs" />
-    <Compile Include="UIHandler.cs" />
     <Page Include="MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
