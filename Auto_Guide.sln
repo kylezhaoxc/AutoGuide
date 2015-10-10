@@ -5,6 +5,10 @@ VisualStudioVersion = 14.0.22310.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auto_Guide", "Auto_Guide\Auto_Guide.csproj", "{0F82A33F-1A7D-43E2-B6AE-0FB0A7DCC303}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestNode", "TestNode\TestNode.csproj", "{1CAFC4F7-C273-4387-B8D6-36E9C32A9CDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization", "Localization\Localization.csproj", "{A0AD81E3-CA22-4FB3-B341-5F9FD43DDF45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{0F82A33F-1A7D-43E2-B6AE-0FB0A7DCC303}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F82A33F-1A7D-43E2-B6AE-0FB0A7DCC303}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F82A33F-1A7D-43E2-B6AE-0FB0A7DCC303}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CAFC4F7-C273-4387-B8D6-36E9C32A9CDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CAFC4F7-C273-4387-B8D6-36E9C32A9CDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CAFC4F7-C273-4387-B8D6-36E9C32A9CDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CAFC4F7-C273-4387-B8D6-36E9C32A9CDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0AD81E3-CA22-4FB3-B341-5F9FD43DDF45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0AD81E3-CA22-4FB3-B341-5F9FD43DDF45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0AD81E3-CA22-4FB3-B341-5F9FD43DDF45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0AD81E3-CA22-4FB3-B341-5F9FD43DDF45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
