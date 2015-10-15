@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+using Localization;
 using Emgu.CV;
 using Emgu.CV.Structure;
-using Localization;
+
 namespace TestNode
 {
     class Program
@@ -14,7 +10,16 @@ namespace TestNode
         
         static void Main(string[] args)
         {
-            Navigator nav = Navigator.GetNavigator(AppDomain.CurrentDomain.BaseDirectory+"\\nodeimages");
+            //List<byte[]> direc = new List<byte[]>();
+            //direc.Add(Cmd.stop); direc.Add(Cmd.stop); direc.Add(Cmd.stop); direc.Add(Cmd.stop); direc.Add(Cmd.stop); direc.Add(Cmd.stop);
+           // PrepNodes prep = PrepNodes.GetNavigator(AppDomain.CurrentDomain.BaseDirectory+"\\nodeimages",direc);
+
+            Navigator nav = new Navigator();
+
+            while (true)
+            {
+                nav.Navigate(new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\nodeimages\\1-1.jpg"));
+            }
             Console.Read();
         }
       
