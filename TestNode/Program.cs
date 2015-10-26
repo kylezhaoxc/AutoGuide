@@ -18,7 +18,7 @@ namespace TestNode
 
             while (true)
             {
-                nav.Navigate(new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\nodeimages\\1-1.jpg"));
+                nav.Navigate(new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\nodeimages\\2.jpg"));
             }
             Console.Read();
         }
