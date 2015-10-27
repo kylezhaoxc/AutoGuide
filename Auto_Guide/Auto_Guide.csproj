@@ -34,38 +34,39 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BetterTogetherPCLib">
-      <HintPath>..\..\..\..\..\Downloads\BetterTogetherPCLib.dll</HintPath>
+    <Reference Include="BetterTogetherPCLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\TestWpf\bin\Debug\BetterTogetherPCLib.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.CV">
-      <HintPath>..\..\..\..\..\..\..\..\Emgu\emgucv-windows-universal-cuda 2.4.10.1940\bin\Emgu.CV.dll</HintPath>
+      <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.CV.GPU">
-      <HintPath>..\..\..\..\..\..\..\..\Emgu\emgucv-windows-universal-cuda 2.4.10.1940\bin\Emgu.CV.GPU.dll</HintPath>
+      <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.GPU.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.CV.ML">
-      <HintPath>..\..\..\..\..\..\..\..\Emgu\emgucv-windows-universal-cuda 2.4.10.1940\bin\Emgu.CV.ML.dll</HintPath>
+      <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.ML.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.CV.OCR">
-      <HintPath>..\..\..\..\..\..\..\..\Emgu\emgucv-windows-universal-cuda 2.4.10.1940\bin\Emgu.CV.OCR.dll</HintPath>
+      <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.OCR.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.CV.OpenCL">
-      <HintPath>..\..\..\..\..\..\..\..\Emgu\emgucv-windows-universal-cuda 2.4.10.1940\bin\Emgu.CV.OpenCL.dll</HintPath>
+      <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.OpenCL.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.CV.Stitching">
-      <HintPath>..\..\..\..\..\..\..\..\Emgu\emgucv-windows-universal-cuda 2.4.10.1940\bin\Emgu.CV.Stitching.dll</HintPath>
+      <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.Stitching.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.CV.UI">
-      <HintPath>..\..\..\..\..\..\..\..\Emgu\emgucv-windows-universal-cuda 2.4.10.1940\bin\Emgu.CV.UI.dll</HintPath>
+      <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.UI.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.CV.VideoStab">
-      <HintPath>..\..\..\..\..\..\..\..\Emgu\emgucv-windows-universal-cuda 2.4.10.1940\bin\Emgu.CV.VideoStab.dll</HintPath>
+      <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.VideoStab.dll</HintPath>
     </Reference>
     <Reference Include="Emgu.Util">
-      <HintPath>..\..\..\..\..\..\..\..\Emgu\emgucv-windows-universal-cuda 2.4.10.1940\bin\Emgu.Util.dll</HintPath>
+      <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.Util.dll</HintPath>
     </Reference>
-    <Reference Include="Search4Match">
-      <HintPath>..\..\..\..\..\..\Desktop\Bak\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Search4Match.dll</HintPath>
+    <Reference Include="Localization">
+      <HintPath>..\Localization\bin\Debug\Localization.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -83,7 +84,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="ZedGraph">
-      <HintPath>..\..\..\..\..\..\..\..\Emgu\emgucv-windows-universal-cuda 2.4.10.1940\bin\ZedGraph.dll</HintPath>
+      <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\ZedGraph.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +92,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Cmd.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
