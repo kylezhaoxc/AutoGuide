@@ -37,37 +37,48 @@
     <Reference Include="BetterTogetherPCLib">
       <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\BetterTogetherPCLib.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV">
+    <Reference Include="Emgu.CV, Version=2.4.10.1940, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV.GPU">
+    <Reference Include="Emgu.CV.GPU, Version=2.4.10.1940, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.GPU.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV.ML">
+    <Reference Include="Emgu.CV.ML, Version=2.4.10.1940, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.ML.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV.OCR">
+    <Reference Include="Emgu.CV.OCR, Version=2.4.10.1940, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.OCR.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV.OpenCL">
+    <Reference Include="Emgu.CV.OpenCL, Version=2.4.10.1940, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.OpenCL.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV.Stitching">
+    <Reference Include="Emgu.CV.Stitching, Version=2.4.10.1940, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.Stitching.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV.UI">
+    <Reference Include="Emgu.CV.UI, Version=2.4.10.1939, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.UI.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV.VideoStab">
+    <Reference Include="Emgu.CV.VideoStab, Version=2.4.10.1940, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.CV.VideoStab.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.Util">
+    <Reference Include="Emgu.Util, Version=2.4.10.1940, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Emgu.Util.dll</HintPath>
     </Reference>
-    <Reference Include="Localization">
+    <Reference Include="Localization, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Localization\bin\Debug\Localization.dll</HintPath>
     </Reference>
-    <Reference Include="Search4Match">
+    <Reference Include="Search4Match, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Search4Match.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -84,7 +95,8 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="ZedGraph">
+    <Reference Include="ZedGraph, Version=5.1.5.28844, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\ZedGraph.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -134,6 +146,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -29,11 +29,11 @@ namespace TestWpf
         int i = 0;
         public MainWindow()
         {
-            List<byte[]> direc = new List<byte[]>();
-            direc.Add(Cmd.stop); direc.Add(Cmd.stop);
-            direc.Add(Cmd.stop); direc.Add(Cmd.stop);
-            direc.Add(Cmd.stop); direc.Add(Cmd.stop);
-            PrepNodes prep = PrepNodes.GetNavigator(AppDomain.CurrentDomain.BaseDirectory + "nodeimages", direc);
+            //List<byte[]> direc = new List<byte[]>();
+            //direc.Add(Cmd.stop); direc.Add(Cmd.stop);
+            //direc.Add(Cmd.stop); direc.Add(Cmd.stop);
+            //direc.Add(Cmd.stop); direc.Add(Cmd.stop);
+            //PrepNodes prep = PrepNodes.GetNavigator(AppDomain.CurrentDomain.BaseDirectory + "nodeimages", direc);
             Console.WriteLine(111);
             InitializeComponent();
             InitBetterTogether();
@@ -62,43 +62,50 @@ namespace TestWpf
         }
         private async void ImageProcess()
         {
-            nav = new Navigator();
-            while(true)
-            {
-                System.Drawing.Bitmap img_bmp = new System.Drawing.Bitmap(_stream, false);
-                observed = new Image<Bgr, byte>(img_bmp);
-
-                await Application.Current.Dispatcher.BeginInvoke(
-                        System.Windows.Threading.DispatcherPriority.Background,
-                        new Action(() =>
-                        {
-                            try
-                            {
-                                //PreviewWindow.Source = ToBitmapSource(img_result);
-                                cam.Source = ToBitmapSource(observed);
-                                status.Content = nav.Status;
-                            }
-                            catch (Exception ex) { };
-                        }));
-
-                nav.Navigate(observed);
-                //status.Content = nav.Status;
-                if (nav.Result != null)
+           
+                nav = new Navigator();
+                while (true)
                 {
-                    await Application.Current.Dispatcher.BeginInvoke(
-                        System.Windows.Threading.DispatcherPriority.Background,
-                        new Action(() =>
-                        {
-                            try
-                            {
-                                //PreviewWindow.Source = ToBitmapSource(img_result);
-                                cam_right.Source = ToBitmapSource(nav.Result);
-                            }
-                            catch (Exception ex) { };
-                        }));
-                }
+                try
+                {
+                    System.Drawing.Bitmap img_bmp = new System.Drawing.Bitmap(_stream, false);
+                    observed = new Image<Bgr, byte>(img_bmp);
 
+                    await Application.Current.Dispatcher.BeginInvoke(
+                            System.Windows.Threading.DispatcherPriority.Background,
+                            new Action(() =>
+                            {
+                                try
+                                {
+                                    //PreviewWindow.Source = ToBitmapSource(img_result);
+                                    cam.Source = ToBitmapSource(observed);
+                                    status.Content = nav.Status;
+                                }
+                                catch (Exception ex) { };
+                            }));
+
+                    nav.Navigate(observed);
+                    //status.Content = nav.Status;
+                    if (nav.Result != null)
+                    {
+                        await Application.Current.Dispatcher.BeginInvoke(
+                            System.Windows.Threading.DispatcherPriority.Background,
+                            new Action(() =>
+                            {
+                                try
+                                {
+                                    //PreviewWindow.Source = ToBitmapSource(img_result);
+                                    cam_right.Source = ToBitmapSource(nav.Result);
+                                }
+                                catch (Exception ex) { };
+                            }));
+                    }
+                }
+                catch (Exception e)
+                { }
             }
+            
+            
         }
 
         #region BETTER_TOGETHER

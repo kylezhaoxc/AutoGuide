@@ -71,8 +71,9 @@
     <Reference Include="Localization">
       <HintPath>..\Localization\bin\Debug\Localization.dll</HintPath>
     </Reference>
-    <Reference Include="Search4Match">
-      <HintPath>..\..\..\..\..\..\Desktop\Bak\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Search4Match.dll</HintPath>
+    <Reference Include="Search4Match, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\emgu_dev\Solution\VS2010_2012\Search4Match\bin\Debug\Search4Match.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
