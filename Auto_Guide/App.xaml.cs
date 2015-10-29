@@ -1,9 +1,21 @@
-﻿namespace Auto_Guide
+﻿using BetterTogether.Bluetooth;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace Auto_Guide
 {
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
-    public partial class App
+    public partial class App : Application
     {
+        public RobotHelper _MyRobot = new RobotHelper();
+
+        internal IBluetoothConnection btconn;
     }
 }

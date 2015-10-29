@@ -9,5 +9,7 @@
         <Image x:Name="cam_right" HorizontalAlignment="Left" Height="300" Margin="415,30,-55,0" VerticalAlignment="Top"
 		       Width="400" />
         <Label x:Name="status" Content="Label" HorizontalAlignment="Left" Margin="22,355,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.701,0.577"/>
+        <Label x:Name="node" Content="Label" HorizontalAlignment="Left" Margin="22,428,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.701,0.577"/>
+
     </Grid>
 </Window>
